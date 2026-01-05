@@ -241,9 +241,16 @@ class EpubGenerator
             $conformsToElement->setAttribute('property', 'dcterms:conformsTo');
             $metadataElement->appendChild($conformsToElement);
         }
+
+        if ($metadata->getCover()) {
+            $coverMeta = $dom->createElement('meta');
+            $coverMeta->setAttribute('name', 'cover');
+            $coverMeta->setAttribute('content', 'cover-image');
+            $metadataElement->appendChild($coverMeta);
+        }
     }
 
-    private function addManifestItems(DOMDocument $dom, \DOMElement $manifest, array $chapters, array $images, array $stylesheets): void
+    private function addManifestItems(DOMDocument $dom, \DOMElement $manifest, Metadata $metadata, array $chapters, array $images, array $stylesheets): void
     {
         // Navegación
         $navItem = $dom->createElement('item');
@@ -252,6 +259,16 @@ class EpubGenerator
         $navItem->setAttribute('media-type', 'application/xhtml+xml');
         $navItem->setAttribute('properties', 'nav');
         $manifest->appendChild($navItem);
+
+        // Cover
+        if ($metadata->getCover()) {
+            $coverItem = $dom->createElement('item');
+            $coverItem->setAttribute('id', 'cover-image');
+            $coverItem->setAttribute('href', 'Images/cover' . $this->getImageExtension($metadata->getCover()));
+            $coverItem->setAttribute('media-type', $this->getImageMimeType($metadata->getCover()));
+            $coverItem->setAttribute('properties', 'cover-image');
+            $manifest->appendChild($coverItem);
+        }
 
         // CSS por defecto
         $cssItem = $dom->createElement('item');
