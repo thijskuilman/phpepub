@@ -107,7 +107,7 @@ class EpubGenerator
         $manifest = $dom->createElement('manifest');
         $package->appendChild($manifest);
 
-        $this->addManifestItems($dom, $manifest, $chapters, $images, $stylesheets);
+        $this->addManifestItems($dom, $manifest, $metadata, $chapters, $images, $stylesheets);
 
         // Spine
         $spine = $dom->createElement('spine');
